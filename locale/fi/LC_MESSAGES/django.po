@@ -3736,6 +3736,10 @@ msgid "LABEL_FEEDBACK"
 msgstr "Palaute"
 
 #: exercise/submission_models.py
+msgid "LABEL_FEEDBACK_JSON"
+msgstr "Palaute JSON"
+
+#: exercise/submission_models.py
 #: exercise/templates/exercise/staff/_submission_data_modal.html
 msgid "LABEL_GRADING_TIME"
 msgstr "arvosteluaika"

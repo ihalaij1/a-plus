@@ -3727,6 +3727,10 @@ msgid "LABEL_FEEDBACK"
 msgstr "Feedback"
 
 #: exercise/submission_models.py
+msgid "LABEL_FEEDBACK_JSON"
+msgstr "Feedback JSON"
+
+#: exercise/submission_models.py
 #: exercise/templates/exercise/staff/_submission_data_modal.html
 msgid "LABEL_GRADING_TIME"
 msgstr "grading time"

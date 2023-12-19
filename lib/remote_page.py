@@ -125,7 +125,12 @@ class RemotePage:
         self.url = urlparse(url)
         self.response = request_for_response(url, post, data, files, stamp, instance_id)
         self.response.encoding = "utf-8"
-        self.soup = BeautifulSoup(self.response.text, 'html5lib')
+        if (self.response.headers.get('content-type') == 'application/json'):
+            self.json = self.response.json().get('json')
+            self.soup = BeautifulSoup(self.response.json().get('html'), 'html5lib')
+        else:
+            self.json = None
+            self.soup = BeautifulSoup(self.response.text, 'html5lib')
 
     def base_address(self):
         path = posixpath.dirname(self.url.path).rstrip('/') + '/'

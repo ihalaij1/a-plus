@@ -125,6 +125,7 @@ class SubmissionSerializer(SubmissionBriefSerializer):
     grade = serializers.SerializerMethodField()
     grader = UserBriefSerializer()
     feedback = serializers.SerializerMethodField()
+    feedback_json = serializers.SerializerMethodField()
     assistant_feedback = serializers.SerializerMethodField()
     grading_data = serializers.SerializerMethodField()
 
@@ -141,6 +142,7 @@ class SubmissionSerializer(SubmissionBriefSerializer):
             'grading_time',
             'grader',
             'feedback',
+            'feedback_json',
             'assistant_feedback',
             'grading_data',
         )
@@ -150,6 +152,9 @@ class SubmissionSerializer(SubmissionBriefSerializer):
 
     def get_feedback(self, obj):
         return obj.feedback if self.context['view'].feedback_revealed else None
+
+    def get_feedback_json(self, obj):
+        return obj.feedback_json if self.context['view'].feedback_revealed else None
 
     def get_assistant_feedback(self, obj):
         return obj.assistant_feedback if self.context['view'].feedback_revealed else None

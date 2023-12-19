@@ -64,6 +64,7 @@ def load_feedback_page(request, url, exercise, submission, no_penalties=False):
 
     if page.is_loaded:
         submission.feedback = page.clean_content
+        submission.feedback_json = remote_page.json
         if page.is_accepted:
             submission.set_waiting()
             if page.is_graded:

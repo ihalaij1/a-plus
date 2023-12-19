@@ -394,6 +394,10 @@ class Submission(SubmissionProto, models.Model):
         verbose_name=_('LABEL_FEEDBACK'),
         blank=True,
     )
+    feedback_json = models.JSONField(
+        verbose_name=_('LABEL_FEEDBACK_JSON'),
+        blank=True, null=True,
+    )
     assistant_feedback = models.TextField(
         verbose_name=_('LABEL_STAFF_FEEDBACK'),
         blank=True,
