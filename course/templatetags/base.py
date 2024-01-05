@@ -7,6 +7,7 @@ from django.utils.text import format_lazy
 from django.utils.translation import get_language, gettext_lazy as _
 from lib.helpers import remove_query_param_from_url, settings_text, update_url_params
 from exercise.submission_models import PendingSubmission
+from site_alert.models import SiteAlert
 
 
 register = template.Library()
@@ -57,11 +58,11 @@ def course_alert(instance):
 
 @register.simple_tag
 def site_alert():
-    message = settings.SITEWIDE_ALERT_TEXT
-    if message:
-        return mark_safe('<div class="alert alert-danger">{}</div>'
-                         .format(pick_localized(message)))
-    return ''
+    alerts = SiteAlert.objects.filter(status=SiteAlert.STATUS_CHOICES.ACTIVE)
+    return mark_safe(''.join(
+        '<div class="alert alert-danger">{}</div>'.format(pick_localized(alert))
+        for alert in alerts
+    ))
 
 
 @register.simple_tag
