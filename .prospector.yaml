@@ -1,7 +1,9 @@
 inherits:
   - default
 ignore-paths:
+  - .venv
   - venv
+  - aplus-manual
   - aplus/local_settings.py
   - aplus/local_settings.example.py
   - aplus/local_settings.test.py

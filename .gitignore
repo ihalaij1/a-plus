@@ -1,6 +1,7 @@
 *.log
 *.pot
 *.pyc
+docker-compose.yml
 local_settings.py
 local_templates/
 aplus/local_settings.py
@@ -8,6 +9,8 @@ aplus/secret_key.py
 .svn
 .DS_Store
 *.mo
+__pycache__/
+.pytest_cache/
 
 .idea
 .settings
@@ -17,6 +20,7 @@ aplus/secret_key.py
 *.sublime-workspace
 
 venv/
+.venv/
 /static/
 /media/
 
@@ -33,6 +37,7 @@ dump.json
 *.orig
 
 test_results/
+/blob-report/
 
 selenium_test/aplus.out
 selenium_test/example_grader.out

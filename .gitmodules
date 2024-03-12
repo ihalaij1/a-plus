@@ -1,0 +1,3 @@
+[submodule "aplus-manual"]
+	path = aplus-manual
+	url = https://github.com/apluslms/aplus-manual.git

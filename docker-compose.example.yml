@@ -1,0 +1,86 @@
+version: '3'
+
+volumes:
+  data:
+  rubyricdb:
+
+services:
+  grader:
+    image: apluslms/run-mooc-grader:1.21
+    command: "python3 -m debugpy --listen 0.0.0.0:5676 manage.py runserver 0.0.0.0:8080"
+    volumes:
+      - data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/aplus:/tmp/aplus
+
+      # Mount MOOC-Grader development code
+      # - $HOME/mooc-grader/:/srv/grader/:ro
+
+      # Set aplus-manual submodule as the default course
+      - ./aplus-manual:/srv/courses/default:ro
+      # Or use some other course (you must remember to build it manually by running ./docker-compile.sh)
+      # - $HOME/y1:/srv/courses/default:ro
+    ports:
+      - "8080:8080"
+      - "5676:5676"
+  plus:
+    image: apluslms/run-aplus-front:1.21
+    command: "python3 -m debugpy --listen 0.0.0.0:5677 manage.py runserver 0.0.0.0:8000"
+    environment:
+      APLUS_ENABLE_DJANGO_DEBUG_TOOLBAR: 'false'
+      USE_GITMANAGER: 'false'
+    volumes:
+      - data:/data
+
+      # Mount A+ development code
+      - .:/srv/aplus/:ro
+    ports:
+      - "8000:8000"
+      - "5677:5677"
+    depends_on:
+      - grader
+      - acos
+      - rubyric
+  jutut:
+    image: apluslms/run-mooc-jutut:2.5
+    volumes:
+      - data:/data
+    ports:
+      - "8082:8082"
+  acos:
+    image: apluslms/run-acos-server
+    user: $USER_ID:$USER_GID
+    ports:
+      - "3000:3000"
+  radar:
+    image: apluslms/run-radar
+    ports:
+      - "8001:8001"
+      # Django debug
+      - "5678:5678"
+      # Celery debug
+      - "5679:5679"
+      # Flower (celery dashboard)
+      - "5555:5555"
+    depends_on:
+      - plus
+      - grader
+    volumes:
+      - data:/data
+  rubyric:
+    image: apluslms/run-rubyric
+    volumes:
+      - data:/data
+    ports:
+      - "8091:8091"
+    depends_on:
+      - rubyricdb
+  rubyricdb:
+    image: postgres:13-bullseye
+    restart: always
+    environment:
+      POSTGRES_USER: rubyric
+      POSTGRES_PASSWORD: rubyric
+      POSTGRES_DB: rubyric
+    volumes:
+      - rubyricdb:/var/lib/postgresql/data
