@@ -11,6 +11,7 @@ from typing import Any, Dict, Iterable, List
 from django.conf import settings
 from django.utils.crypto import get_random_string as django_get_random_string
 from django.utils.deprecation import RemovedInNextVersionWarning
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import get_language
 
 
@@ -144,6 +145,25 @@ def build_aplus_url(url: str, user_url: bool = False) -> str:
     baseparsed = urlparse(baseurl)
     parsed = parsed._replace(scheme=baseparsed.scheme, netloc=baseparsed.netloc)
     return urlunparse(parsed)
+
+
+def get_redirect_url_from_referer(request):
+    referer = request.headers.get('referer', '/')
+    if url_has_allowed_host_and_scheme(url=referer, allowed_hosts={request.get_host()}):
+        parsed = urlparse(referer)
+        path = parsed.path
+        if parsed.query:
+            path += '?' + parsed.query
+        if parsed.fragment:
+            path += '#' + parsed.fragment
+
+        if path.startswith('//'):
+            referer = '/'
+        else:
+            referer = path
+    else:
+        referer = '/'
+    return referer
 
 
 FILENAME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-0123456789"

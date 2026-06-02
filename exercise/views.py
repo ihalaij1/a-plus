@@ -20,7 +20,7 @@ from authorization.permissions import ACCESS
 from course.models import CourseModule, StudentModuleGoal, SubmissionTag
 from course.viewbase import CourseInstanceBaseView, CourseModuleBaseView, EnrollableViewMixin
 from exercise.forms import StudentModuleGoalForm
-from lib.helpers import query_dict_to_list_of_tuples, safe_file_name, is_ajax
+from lib.helpers import get_redirect_url_from_referer, query_dict_to_list_of_tuples, safe_file_name, is_ajax
 from lib.remote_page import RemotePageNotFound, request_for_response
 from lib.viewbase import BaseFormView, BaseRedirectMixin, BaseView
 from userprofile.models import UserProfile
@@ -62,7 +62,7 @@ class SubmissionTaggingAddView(CourseInstanceBaseView):
         SubmissionTagging.objects.create(submission=submission, tag=subtag)
 
         # Redirect back to the previous page
-        return redirect(request.headers.get('referer', '/'))
+        return redirect(get_redirect_url_from_referer(request))
 
 
 class SubmissionTaggingRemoveView(CourseInstanceBaseView):
@@ -80,7 +80,7 @@ class SubmissionTaggingRemoveView(CourseInstanceBaseView):
         SubmissionTagging.objects.filter(submission=submission, tag=subtag).delete()
 
         # Redirect back to the previous page
-        return redirect(request.headers.get('referer', '/'))
+        return redirect(get_redirect_url_from_referer(request))
 
 
 class ExerciseInfoView(ExerciseBaseView):

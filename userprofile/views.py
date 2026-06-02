@@ -24,7 +24,7 @@ from django.views.decorators.http import require_POST
 
 from authorization.permissions import ACCESS
 from course.models import CourseInstance
-from lib.helpers import settings_text, remove_query_param_from_url, is_ajax
+from lib.helpers import get_redirect_url_from_referer, settings_text, remove_query_param_from_url, is_ajax
 from lib.viewbase import BaseView
 from userprofile.models import UserProfile
 from .viewbase import UserProfileView
@@ -368,4 +368,4 @@ class PseudonymizeView(BaseView):
     def get(self, request: HttpRequest) -> HttpResponse:
         pseudonymize = request.session.get("pseudonymize", False)
         request.session["pseudonymize"] = not pseudonymize
-        return HttpResponseRedirect(request.headers.get("referer", "/"))
+        return HttpResponseRedirect(get_redirect_url_from_referer(request))
